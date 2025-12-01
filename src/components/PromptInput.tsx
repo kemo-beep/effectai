@@ -53,94 +53,104 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onGenerate, isLoading 
 
   return (
     <div className="animate-in">
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8">
         {/* Main Input */}
         <div className="relative group">
-          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-secondary rounded-xl opacity-20 group-hover:opacity-50 transition duration-500 blur"></div>
+          <div className="absolute -inset-0.5 bg-gradient-to-r from-primary-500 to-secondary rounded-2xl opacity-20 group-hover:opacity-50 transition duration-500 blur-sm"></div>
           <div className="relative">
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Describe your motion graphic... e.g., 'Create a 15-second promo for a fitness app with energetic neon style'"
-              className="w-full px-4 py-4 pr-12 bg-[#0a0a1e] border border-white/10 rounded-xl text-white placeholder:text-white/30 resize-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/20 transition-all duration-300 min-h-[120px]"
+              className="w-full px-6 py-5 pr-14 bg-background-secondary border border-white/10 rounded-xl text-white placeholder:text-white/20 resize-none focus:border-primary-500/50 focus:ring-2 focus:ring-primary-500/20 transition-all duration-300 min-h-[140px] text-lg leading-relaxed shadow-inner"
               rows={3}
               disabled={isLoading}
             />
-            <div className="absolute right-4 top-4 text-2xl opacity-50 pointer-events-none animate-pulse-slow">
+            <div className="absolute right-5 top-5 text-2xl opacity-50 pointer-events-none animate-pulse-slow">
               ✨
             </div>
           </div>
         </div>
 
-        {/* Options Row */}
-        <div className="flex flex-wrap gap-4 items-end">
+        {/* Options Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Style Selection */}
-          <div className="flex flex-col gap-2 min-w-[180px] flex-1">
-            <label className="text-[10px] font-bold text-primary-200 uppercase tracking-wider">
-              Style
-            </label>
+          <div className="md:col-span-4 flex flex-col gap-2">
+            <label className="label">Style</label>
             <div className="relative">
               <select
                 value={style}
                 onChange={(e) => setStyle(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm cursor-pointer focus:border-primary-500 focus:ring-1 focus:ring-primary-500/20 transition-all duration-200 appearance-none hover:bg-white/10"
+                className="select-field"
                 disabled={isLoading}
               >
                 {STYLE_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value} className="bg-[#0a0a1e] text-white">
+                  <option key={opt.value} value={opt.value} className="bg-background-secondary text-white">
                     {opt.emoji} {opt.label}
                   </option>
                 ))}
               </select>
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-white/50 text-xs">
-                ▼
-              </div>
             </div>
           </div>
 
           {/* Aspect Ratio Selection */}
-          <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-bold text-primary-200 uppercase tracking-wider">
-              Aspect Ratio
-            </label>
-            <div className="flex gap-1 bg-white/5 p-1 rounded-lg border border-white/5">
+          <div className="md:col-span-4 flex flex-col gap-2">
+            <label className="label">Aspect Ratio</label>
+            <div className="grid grid-cols-4 gap-1 bg-white/5 p-1 rounded-xl border border-white/5 h-[46px]">
               {ASPECT_RATIO_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
                   onClick={() => setAspectRatio(opt.value)}
-                  className={`px-2.5 py-1.5 text-xs font-medium rounded-md transition-all duration-200 flex items-center gap-1 ${aspectRatio === opt.value
+                  className={`relative flex items-center justify-center rounded-lg transition-all duration-200 ${aspectRatio === opt.value
                     ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                    : 'text-white/40 hover:text-white hover:bg-white/5'
                     }`}
                   disabled={isLoading}
                   title={`${opt.label} - ${opt.desc}`}
                 >
-                  <span>{opt.icon}</span>
-                  <span className="hidden sm:inline">{opt.label}</span>
+                  <span className="text-lg">{opt.icon}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Duration Selection */}
-          <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-bold text-primary-200 uppercase tracking-wider">
-              Duration
-            </label>
-            <div className="flex gap-1 bg-white/5 p-1 rounded-lg border border-white/5">
+          <div className="md:col-span-4 flex flex-col gap-2">
+            <label className="label">Duration</label>
+            <div className="grid grid-cols-4 gap-1 bg-white/5 p-1 rounded-xl border border-white/5 h-[46px]">
               {DURATION_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
                   onClick={() => setDuration(opt.value)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${duration === opt.value
+                  className={`text-xs font-medium rounded-lg transition-all duration-200 ${duration === opt.value
                     ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                    : 'text-white/40 hover:text-white hover:bg-white/5'
                     }`}
                   disabled={isLoading}
                 >
                   {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Action Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-2 border-t border-white/5">
+          {/* Example Prompts */}
+          <div className="flex-1 overflow-x-auto pb-2 sm:pb-0 w-full sm:w-auto scrollbar-hide">
+            <div className="flex items-center gap-2">
+              <span className="label mr-2 whitespace-nowrap">Try:</span>
+              {EXAMPLE_PROMPTS.slice(0, 2).map((example, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPrompt(example)}
+                  className="px-3 py-1.5 text-[11px] bg-white/5 hover:bg-primary-500/10 border border-white/5 hover:border-primary-500/30 rounded-full text-white/50 hover:text-primary-200 transition-all duration-200 whitespace-nowrap"
+                  disabled={isLoading}
+                >
+                  {example.slice(0, 25)}...
                 </button>
               ))}
             </div>
@@ -150,7 +160,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onGenerate, isLoading 
           <button
             type="submit"
             disabled={!prompt.trim() || isLoading}
-            className={`btn-primary ml-auto flex items-center gap-2 ${!prompt.trim() || isLoading ? 'opacity-50 cursor-not-allowed grayscale' : ''
+            className={`btn-primary w-full sm:w-auto min-w-[160px] flex items-center justify-center gap-2 py-3 text-base shadow-glow-lg ${!prompt.trim() || isLoading ? 'opacity-50 cursor-not-allowed grayscale' : ''
               }`}
           >
             {isLoading ? (
@@ -161,27 +171,12 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onGenerate, isLoading 
             ) : (
               <>
                 <span>🚀</span>
-                Generate
+                Generate Video
               </>
             )}
           </button>
         </div>
       </form>
-
-      {/* Example Prompts */}
-      <div className="flex flex-wrap gap-2 items-center pt-6 border-t border-white/5 mt-6">
-        <span className="text-[10px] text-white/40 font-bold uppercase tracking-wider mr-2">Try:</span>
-        {EXAMPLE_PROMPTS.map((example, i) => (
-          <button
-            key={i}
-            onClick={() => setPrompt(example)}
-            className="px-3 py-1.5 text-[10px] bg-white/5 hover:bg-primary-500/20 border border-white/5 hover:border-primary-500/30 rounded-full text-white/60 hover:text-primary-200 transition-all duration-200"
-            disabled={isLoading}
-          >
-            {example.slice(0, 30)}...
-          </button>
-        ))}
-      </div>
     </div>
   );
 };

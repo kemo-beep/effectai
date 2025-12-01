@@ -104,38 +104,36 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
-      {/* Background Ambient Mesh */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary-900/20 blur-[120px] animate-pulse-slow" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-secondary/20 blur-[120px] animate-pulse-slow delay-1000" />
-        <div className="absolute top-[40%] left-[50%] transform -translate-x-1/2 w-[60%] h-[60%] rounded-full bg-primary-500/10 blur-[150px] animate-pulse-slow delay-500" />
-        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.03] mix-blend-overlay" />
-      </div>
-
+    <>
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4 transition-all duration-300">
         <div className="max-w-7xl mx-auto">
-          <div className="glass-heavy rounded-2xl px-6 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-secondary flex items-center justify-center shadow-glow">
+          <div className="glass rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-3 group cursor-pointer">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-secondary flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform duration-300">
                 <span className="text-xl">⚡</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-lg font-bold text-white tracking-tight">MotionForge</span>
-                <span className="text-[10px] uppercase tracking-wider text-primary-200 font-semibold">AI Studio</span>
+                <span className="text-lg font-bold text-white tracking-tight group-hover:text-primary-200 transition-colors">MotionForge</span>
+                <span className="text-[10px] uppercase tracking-wider text-primary-200 font-semibold opacity-80">AI Studio</span>
               </div>
             </div>
 
-            <nav className="hidden md:flex items-center gap-6">
-              <button className="text-sm text-white/70 hover:text-white transition-colors">Gallery</button>
-              <button className="text-sm text-white/70 hover:text-white transition-colors">Pricing</button>
-              <button className="text-sm text-white/70 hover:text-white transition-colors">Docs</button>
+            <nav className="hidden md:flex items-center gap-8">
+              {['Gallery', 'Pricing', 'Docs'].map((item) => (
+                <button key={item} className="text-sm font-medium text-white/60 hover:text-white transition-colors relative group">
+                  {item}
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100" />
+                </button>
+              ))}
             </nav>
 
             <div className="flex items-center gap-3">
+              <button className="btn-secondary text-sm py-2 px-4 hidden sm:block">
+                Log In
+              </button>
               <button className="btn-primary text-sm py-2 px-4 shadow-glow">
-                Sign In
+                Get Started
               </button>
             </div>
           </div>
@@ -160,57 +158,57 @@ export default function Home() {
         totalDuration={totalDuration}
       />
 
-      <main className="flex-1 relative z-10 pt-32 pb-12 px-6">
+      <main className="flex-1 relative z-10 pt-32 pb-12 px-4 sm:px-6">
         <div className="max-w-7xl mx-auto">
           {!hasGenerated ? (
             /* Initial State - Generation UI */
-            <div className="max-w-3xl mx-auto animate-in">
-              <div className="text-center mb-12">
-                <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 bg-gradient-to-r from-primary-400 via-secondary to-primary-400 bg-clip-text text-transparent">
-                  Create Stunning Motion Graphics
+            <div className="max-w-4xl mx-auto animate-in-up">
+              <div className="text-center mb-16 relative">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary-500/20 blur-[100px] rounded-full pointer-events-none" />
+                <h1 className="heading-1 mb-6 relative z-10">
+                  Create Stunning <br />
+                  <span className="text-gradient-primary">Motion Graphics with AI</span>
                 </h1>
-                <p className="text-lg text-white/70 max-w-2xl mx-auto">
-                  Powered by AI. Describe your vision and watch it come to life.
+                <p className="text-body text-lg max-w-2xl mx-auto relative z-10">
+                  Transform your ideas into professional animations in seconds.
+                  Powered by advanced AI to bring your vision to life.
                 </p>
               </div>
 
-              <div className="glass-panel rounded-2xl p-8 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-secondary opacity-50"></div>
-                <h3 className="text-2xl font-semibold text-white mb-6 flex items-center gap-3 justify-center">
-                  <span className="text-primary-400">✨</span> Generate Motion
-                </h3>
-                <PromptInput onGenerate={handleGenerate} isLoading={isGenerating} />
+              <div className="glass-panel rounded-3xl p-1 relative overflow-hidden shadow-2xl ring-1 ring-white/10">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 to-secondary/5" />
+                <div className="bg-background-secondary/90 backdrop-blur-xl rounded-[22px] p-8 sm:p-10 relative">
+                  <div className="flex items-center justify-between mb-8">
+                    <h3 className="heading-3 flex items-center gap-3">
+                      <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary-500/10 text-primary-400">✨</span>
+                      Generate Motion
+                    </h3>
+                    <button
+                      onClick={() => setShowTemplates(true)}
+                      className="text-sm font-medium text-white/60 hover:text-white flex items-center gap-2 transition-colors group"
+                    >
+                      <span>Browse Templates</span>
+                      <span className="group-hover:translate-x-0.5 transition-transform">→</span>
+                    </button>
+                  </div>
+
+                  <PromptInput onGenerate={handleGenerate} isLoading={isGenerating} />
+                </div>
               </div>
 
-              {/* Templates Button */}
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={() => setShowTemplates(true)}
-                  className="btn-secondary text-sm py-3 px-6 flex items-center gap-2"
-                >
-                  <span>📚</span> Browse Templates
-                </button>
-              </div>
-
-              {/* Quick Tips */}
-              <div className="mt-8 glass rounded-2xl p-6 border-l-4 border-primary-500">
-                <h4 className="text-sm font-semibold mb-4 flex items-center gap-2 text-white">
-                  💡 Pro Tips
-                </h4>
-                <ul className="text-xs text-white/60 space-y-3 leading-relaxed">
-                  <li className="flex items-start gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary-400 mt-1.5 shrink-0"></span>
-                    <span>Describe the <strong>mood</strong> and <strong>style</strong> in your prompt for better results.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary-400 mt-1.5 shrink-0"></span>
-                    <span>Browse templates to get started quickly or create something unique from scratch.</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary-400 mt-1.5 shrink-0"></span>
-                    <span>Exporting requires AWS Lambda configuration. Check docs for setup.</span>
-                  </li>
-                </ul>
+              {/* Features Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+                {[
+                  { icon: "🎨", title: "Style Control", desc: "Choose from various artistic styles or define your own unique look." },
+                  { icon: "⚡", title: "Real-time Preview", desc: "See your changes instantly with our high-performance player." },
+                  { icon: "🚀", title: "One-click Export", desc: "Export to MP4, GIF, or WebM in up to 4K resolution." }
+                ].map((feature, i) => (
+                  <div key={i} className="glass p-6 rounded-2xl hover:bg-white/5 transition-colors duration-300">
+                    <div className="text-3xl mb-4">{feature.icon}</div>
+                    <h4 className="text-white font-semibold mb-2">{feature.title}</h4>
+                    <p className="text-sm text-white/50 leading-relaxed">{feature.desc}</p>
+                  </div>
+                ))}
               </div>
             </div>
           ) : (
@@ -307,23 +305,53 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 bg-black/20 backdrop-blur-lg mt-auto">
-        <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-xl">⚡</span>
-            <span className="text-sm font-semibold text-white/80">MotionForge</span>
+      <footer className="border-t border-white/5 bg-background-secondary/50 backdrop-blur-lg mt-auto">
+        <div className="max-w-7xl mx-auto px-6 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div className="col-span-1 md:col-span-2">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl">⚡</span>
+                <span className="text-lg font-bold text-white">MotionForge</span>
+              </div>
+              <p className="text-sm text-white/40 max-w-xs leading-relaxed">
+                The next generation of motion graphics creation.
+                Powered by artificial intelligence to help you create stunning videos in minutes.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-bold text-white mb-4">Product</h4>
+              <ul className="space-y-2 text-sm text-white/40">
+                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Templates</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Showcase</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-sm font-bold text-white mb-4">Company</h4>
+              <ul className="space-y-2 text-sm text-white/40">
+                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              </ul>
+            </div>
           </div>
-          <p className="text-xs text-white/40">
-            Powered by <span className="text-white/60">Remotion</span> + <span className="text-white/60">Next.js</span> + <span className="text-white/60">Gemini AI</span>
-          </p>
-          <div className="flex gap-4">
-            <a href="#" className="text-xs text-white/40 hover:text-primary-400 transition-colors">Privacy</a>
-            <a href="#" className="text-xs text-white/40 hover:text-primary-400 transition-colors">Terms</a>
-            <a href="#" className="text-xs text-white/40 hover:text-primary-400 transition-colors">GitHub</a>
+
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-xs text-white/30">
+              © 2025 MotionForge AI. All rights reserved.
+            </p>
+            <div className="flex gap-6">
+              <a href="#" className="text-xs text-white/30 hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="text-xs text-white/30 hover:text-white transition-colors">Terms of Service</a>
+            </div>
           </div>
         </div>
       </footer>
-    </div>
+    </>
   );
 }
 
