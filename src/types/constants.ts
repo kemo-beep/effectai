@@ -1,15 +1,812 @@
 import { z } from "zod";
-export const COMP_NAME = "MyComp";
 
-export const CompositionProps = z.object({
-  title: z.string(),
+// Composition names
+export const COMP_NAME = "MotionForge";
+
+// Scene types for AI generation
+export const SceneType = z.enum([
+  "text-reveal",
+  "logo-intro",
+  "kinetic-typography",
+  "shape-morph",
+  "parallax",
+  "slide-transition",
+  "bounce-in",
+  "fade-sequence",
+  "lower-third",
+  "social-callout",
+  "infographic-chart",
+  "animated-icon",
+  "transition-effect",
+  "product-showcase",
+  "meme-effect",
+  "reaction-popup",
+  "number-counter",
+  "speech-bubble",
+  "typewriter",
+  "timeline",
+  "glitch-text",
+  "vhs-overlay",
+  "gradient-wave",
+  "checklist",
+  "device-mockup",
+]);
+
+// Style presets
+export const StylePreset = z.enum([
+  "neon-futuristic",
+  "corporate-minimal",
+  "hand-drawn",
+  "kinetic-3d",
+  "lofi-anime",
+  "gradient-flow",
+  "bold-modern",
+  "elegant-classic",
+]);
+
+// Scene schema
+export const SceneSchema = z.object({
+  id: z.string(),
+  type: z.string(),
+  text: z.string().optional(),
+  duration: z.number().default(60), // frames
+  style: StylePreset.default("bold-modern"),
+  colors: z.object({
+    primary: z.string().default("#6366f1"),
+    secondary: z.string().default("#ec4899"),
+    background: z.string().default("#0f0f23"),
+    text: z.string().default("#ffffff"),
+  }),
+  animation: z.object({
+    easing: z.string().default("spring"),
+    intensity: z.number().min(0).max(1).default(0.7),
+  }),
 });
 
-export const defaultMyCompProps: z.infer<typeof CompositionProps> = {
-  title: "Next.js and Remotion",
+// Full composition props
+export const CompositionProps = z.object({
+  title: z.string(),
+  scenes: z.array(SceneSchema).default([]),
+  style: StylePreset.default("bold-modern"),
+  colors: z.object({
+    primary: z.string().default("#6366f1"),
+    secondary: z.string().default("#ec4899"),
+    background: z.string().default("#0f0f23"),
+    text: z.string().default("#ffffff"),
+  }),
+  aspectRatio: z.enum(["16:9", "9:16", "1:1", "4:5"]).default("16:9"),
+});
+
+export type Scene = z.infer<typeof SceneSchema>;
+export type CompositionPropsType = z.infer<typeof CompositionProps>;
+
+export const defaultMyCompProps: CompositionPropsType = {
+  title: "Welcome to MotionForge",
+  scenes: [
+    {
+      id: "scene-1",
+      type: "text-reveal",
+      text: "Create stunning motion graphics",
+      duration: 90,
+      style: "bold-modern",
+      colors: {
+        primary: "#6366f1",
+        secondary: "#ec4899",
+        background: "#0f0f23",
+        text: "#ffffff",
+      },
+      animation: { easing: "spring", intensity: 0.7 },
+    },
+    {
+      id: "scene-2",
+      type: "kinetic-typography",
+      text: "Powered by AI",
+      duration: 60,
+      style: "neon-futuristic",
+      colors: {
+        primary: "#00ff88",
+        secondary: "#00d4ff",
+        background: "#0a0a0a",
+        text: "#ffffff",
+      },
+      animation: { easing: "spring", intensity: 0.8 },
+    },
+  ],
+  style: "bold-modern",
+  colors: {
+    primary: "#6366f1",
+    secondary: "#ec4899",
+    background: "#0f0f23",
+    text: "#ffffff",
+  },
+  aspectRatio: "16:9",
 };
 
-export const DURATION_IN_FRAMES = 200;
-export const VIDEO_WIDTH = 1280;
-export const VIDEO_HEIGHT = 720;
+export const DURATION_IN_FRAMES = 300;
+export const VIDEO_WIDTH = 1920;
+export const VIDEO_HEIGHT = 1080;
 export const VIDEO_FPS = 30;
+
+// Aspect ratio presets
+export const ASPECT_RATIOS = {
+  "16:9": { width: 1920, height: 1080, label: "16:9 (Landscape)", icon: "📺" },
+  "9:16": { width: 1080, height: 1920, label: "9:16 (Vertical)", icon: "📱" },
+  "1:1": { width: 1080, height: 1080, label: "1:1 (Square)", icon: "⬜" },
+  "4:5": { width: 1080, height: 1350, label: "4:5 (Portrait)", icon: "📸" },
+} as const;
+
+export type AspectRatio = keyof typeof ASPECT_RATIOS;
+
+// Style preset configurations
+export const STYLE_CONFIGS = {
+  "neon-futuristic": {
+    colors: { primary: "#00ff88", secondary: "#00d4ff", background: "#0a0a0a", text: "#ffffff" },
+    fontWeight: "700",
+    glowEffect: true,
+  },
+  "corporate-minimal": {
+    colors: { primary: "#2563eb", secondary: "#64748b", background: "#ffffff", text: "#1e293b" },
+    fontWeight: "500",
+    glowEffect: false,
+  },
+  "hand-drawn": {
+    colors: { primary: "#f97316", secondary: "#fbbf24", background: "#fef3c7", text: "#78350f" },
+    fontWeight: "600",
+    glowEffect: false,
+  },
+  "kinetic-3d": {
+    colors: { primary: "#8b5cf6", secondary: "#d946ef", background: "#18181b", text: "#ffffff" },
+    fontWeight: "800",
+    glowEffect: true,
+  },
+  "lofi-anime": {
+    colors: { primary: "#fb7185", secondary: "#a78bfa", background: "#1e1b4b", text: "#e0e7ff" },
+    fontWeight: "500",
+    glowEffect: false,
+  },
+  "gradient-flow": {
+    colors: { primary: "#06b6d4", secondary: "#8b5cf6", background: "#0c0a09", text: "#ffffff" },
+    fontWeight: "600",
+    glowEffect: true,
+  },
+  "bold-modern": {
+    colors: { primary: "#6366f1", secondary: "#ec4899", background: "#0f0f23", text: "#ffffff" },
+    fontWeight: "700",
+    glowEffect: false,
+  },
+  "elegant-classic": {
+    colors: { primary: "#b45309", secondary: "#a16207", background: "#fffbeb", text: "#451a03" },
+    fontWeight: "400",
+    glowEffect: false,
+  },
+};
+
+// Template system
+export const TemplateCategory = z.enum([
+  "youtube-intro",
+  "social-media",
+  "explainer",
+  "product-demo",
+  "vlog",
+  "educational",
+  "promotional",
+  "shorts-reels",
+]);
+
+export const TemplateSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  category: TemplateCategory,
+  description: z.string(),
+  thumbnail: z.string().optional(),
+  duration: z.number(), // in seconds
+  scenes: z.array(SceneSchema),
+  style: StylePreset,
+  colors: z.object({
+    primary: z.string(),
+    secondary: z.string(),
+    background: z.string(),
+    text: z.string(),
+  }),
+  customizable: z.array(z.string()).default([]), // fields that can be customized
+});
+
+export type Template = z.infer<typeof TemplateSchema>;
+
+// Pre-built templates
+export const TEMPLATES: Template[] = [
+  {
+    id: "youtube-intro-bold",
+    name: "Bold YouTube Intro",
+    category: "youtube-intro",
+    description: "High-energy intro with animated title and logo reveal",
+    duration: 8,
+    style: "bold-modern",
+    colors: {
+      primary: "#ff0000",
+      secondary: "#ffffff",
+      background: "#000000",
+      text: "#ffffff",
+    },
+    customizable: ["title", "subtitle", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "logo-intro",
+        text: "YOUR CHANNEL",
+        duration: 90,
+        style: "bold-modern",
+        colors: { primary: "#ff0000", secondary: "#ffffff", background: "#000000", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.9 },
+      },
+      {
+        id: "scene-2",
+        type: "kinetic-typography",
+        text: "WELCOME BACK",
+        duration: 60,
+        style: "bold-modern",
+        colors: { primary: "#ff0000", secondary: "#ffffff", background: "#000000", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.8 },
+      },
+      {
+        id: "scene-3",
+        type: "bounce-in",
+        text: "LET'S GO",
+        duration: 90,
+        style: "bold-modern",
+        colors: { primary: "#ff0000", secondary: "#ffffff", background: "#000000", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.9 },
+      },
+    ],
+  },
+  {
+    id: "social-callout",
+    name: "Social Media Callout",
+    category: "social-media",
+    description: "Like, subscribe, and follow animations",
+    duration: 5,
+    style: "neon-futuristic",
+    colors: {
+      primary: "#00ff88",
+      secondary: "#00d4ff",
+      background: "#0a0a0a",
+      text: "#ffffff",
+    },
+    customizable: ["text", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "social-callout",
+        text: "LIKE & SUBSCRIBE",
+        duration: 90,
+        style: "neon-futuristic",
+        colors: { primary: "#00ff88", secondary: "#00d4ff", background: "#0a0a0a", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.8 },
+      },
+      {
+        id: "scene-2",
+        type: "animated-icon",
+        text: "👍 🔔",
+        duration: 60,
+        style: "neon-futuristic",
+        colors: { primary: "#00ff88", secondary: "#00d4ff", background: "#0a0a0a", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.9 },
+      },
+    ],
+  },
+  {
+    id: "lower-third-minimal",
+    name: "Minimal Lower Third",
+    category: "youtube-intro",
+    description: "Clean name tag and title overlay",
+    duration: 6,
+    style: "corporate-minimal",
+    colors: {
+      primary: "#2563eb",
+      secondary: "#64748b",
+      background: "#ffffff",
+      text: "#1e293b",
+    },
+    customizable: ["name", "title", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "lower-third",
+        text: "John Doe | CEO",
+        duration: 180,
+        style: "corporate-minimal",
+        colors: { primary: "#2563eb", secondary: "#64748b", background: "#ffffff", text: "#1e293b" },
+        animation: { easing: "spring", intensity: 0.6 },
+      },
+    ],
+  },
+  {
+    id: "infographic-stats",
+    name: "Animated Statistics",
+    category: "educational",
+    description: "Data visualization with animated charts",
+    duration: 10,
+    style: "gradient-flow",
+    colors: {
+      primary: "#06b6d4",
+      secondary: "#8b5cf6",
+      background: "#0c0a09",
+      text: "#ffffff",
+    },
+    customizable: ["data", "title", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "text-reveal",
+        text: "KEY STATISTICS",
+        duration: 60,
+        style: "gradient-flow",
+        colors: { primary: "#06b6d4", secondary: "#8b5cf6", background: "#0c0a09", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.7 },
+      },
+      {
+        id: "scene-2",
+        type: "infographic-chart",
+        text: "75% Growth",
+        duration: 120,
+        style: "gradient-flow",
+        colors: { primary: "#06b6d4", secondary: "#8b5cf6", background: "#0c0a09", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.8 },
+      },
+      {
+        id: "scene-3",
+        type: "infographic-chart",
+        text: "1M+ Users",
+        duration: 120,
+        style: "gradient-flow",
+        colors: { primary: "#06b6d4", secondary: "#8b5cf6", background: "#0c0a09", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.8 },
+      },
+    ],
+  },
+  {
+    id: "product-showcase",
+    name: "Product Showcase",
+    category: "product-demo",
+    description: "Sleek product reveal with 3D effects",
+    duration: 12,
+    style: "kinetic-3d",
+    colors: {
+      primary: "#8b5cf6",
+      secondary: "#d946ef",
+      background: "#18181b",
+      text: "#ffffff",
+    },
+    customizable: ["product", "features", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "slide-transition",
+        text: "INTRODUCING",
+        duration: 60,
+        style: "kinetic-3d",
+        colors: { primary: "#8b5cf6", secondary: "#d946ef", background: "#18181b", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.8 },
+      },
+      {
+        id: "scene-2",
+        type: "product-showcase",
+        text: "NEW PRODUCT",
+        duration: 180,
+        style: "kinetic-3d",
+        colors: { primary: "#8b5cf6", secondary: "#d946ef", background: "#18181b", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.9 },
+      },
+      {
+        id: "scene-3",
+        type: "kinetic-typography",
+        text: "AVAILABLE NOW",
+        duration: 120,
+        style: "kinetic-3d",
+        colors: { primary: "#8b5cf6", secondary: "#d946ef", background: "#18181b", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.8 },
+      },
+    ],
+  },
+  {
+    id: "shorts-viral",
+    name: "Viral Shorts Opener",
+    category: "shorts-reels",
+    description: "Fast-paced attention grabber for TikTok/Shorts",
+    duration: 3,
+    style: "lofi-anime",
+    colors: {
+      primary: "#fb7185",
+      secondary: "#a78bfa",
+      background: "#1e1b4b",
+      text: "#e0e7ff",
+    },
+    customizable: ["hook", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "meme-effect",
+        text: "WAIT FOR IT",
+        duration: 45,
+        style: "lofi-anime",
+        colors: { primary: "#fb7185", secondary: "#a78bfa", background: "#1e1b4b", text: "#e0e7ff" },
+        animation: { easing: "spring", intensity: 1.0 },
+      },
+      {
+        id: "scene-2",
+        type: "reaction-popup",
+        text: "🤯",
+        duration: 45,
+        style: "lofi-anime",
+        colors: { primary: "#fb7185", secondary: "#a78bfa", background: "#1e1b4b", text: "#e0e7ff" },
+        animation: { easing: "spring", intensity: 1.0 },
+      },
+    ],
+  },
+  {
+    id: "explainer-simple",
+    name: "Simple Explainer",
+    category: "explainer",
+    description: "Clean educational content with text and icons",
+    duration: 15,
+    style: "elegant-classic",
+    colors: {
+      primary: "#b45309",
+      secondary: "#a16207",
+      background: "#fffbeb",
+      text: "#451a03",
+    },
+    customizable: ["steps", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "text-reveal",
+        text: "How It Works",
+        duration: 60,
+        style: "elegant-classic",
+        colors: { primary: "#b45309", secondary: "#a16207", background: "#fffbeb", text: "#451a03" },
+        animation: { easing: "spring", intensity: 0.6 },
+      },
+      {
+        id: "scene-2",
+        type: "animated-icon",
+        text: "Step 1: Sign Up",
+        duration: 120,
+        style: "elegant-classic",
+        colors: { primary: "#b45309", secondary: "#a16207", background: "#fffbeb", text: "#451a03" },
+        animation: { easing: "spring", intensity: 0.7 },
+      },
+      {
+        id: "scene-3",
+        type: "animated-icon",
+        text: "Step 2: Create",
+        duration: 120,
+        style: "elegant-classic",
+        colors: { primary: "#b45309", secondary: "#a16207", background: "#fffbeb", text: "#451a03" },
+        animation: { easing: "spring", intensity: 0.7 },
+      },
+      {
+        id: "scene-4",
+        type: "animated-icon",
+        text: "Step 3: Share",
+        duration: 150,
+        style: "elegant-classic",
+        colors: { primary: "#b45309", secondary: "#a16207", background: "#fffbeb", text: "#451a03" },
+        animation: { easing: "spring", intensity: 0.7 },
+      },
+    ],
+  },
+  {
+    id: "promo-sale",
+    name: "Sale Promotion",
+    category: "promotional",
+    description: "Eye-catching sale announcement",
+    duration: 8,
+    style: "hand-drawn",
+    colors: {
+      primary: "#f97316",
+      secondary: "#fbbf24",
+      background: "#fef3c7",
+      text: "#78350f",
+    },
+    customizable: ["discount", "details", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "bounce-in",
+        text: "MEGA SALE",
+        duration: 90,
+        style: "hand-drawn",
+        colors: { primary: "#f97316", secondary: "#fbbf24", background: "#fef3c7", text: "#78350f" },
+        animation: { easing: "spring", intensity: 0.9 },
+      },
+      {
+        id: "scene-2",
+        type: "kinetic-typography",
+        text: "50% OFF",
+        duration: 90,
+        style: "hand-drawn",
+        colors: { primary: "#f97316", secondary: "#fbbf24", background: "#fef3c7", text: "#78350f" },
+        animation: { easing: "spring", intensity: 0.9 },
+      },
+      {
+        id: "scene-3",
+        type: "text-reveal",
+        text: "Limited Time Only",
+        duration: 60,
+        style: "hand-drawn",
+        colors: { primary: "#f97316", secondary: "#fbbf24", background: "#fef3c7", text: "#78350f" },
+        animation: { easing: "spring", intensity: 0.7 },
+      },
+    ],
+  },
+  {
+    id: "retro-vhs",
+    name: "VHS Retro Style",
+    category: "shorts-reels",
+    description: "Nostalgic VHS aesthetic with glitch effects",
+    duration: 6,
+    style: "lofi-anime",
+    colors: { primary: "#ff6b6b", secondary: "#4ecdc4", background: "#1a1a2e", text: "#ffffff" },
+    customizable: ["text", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "vhs-overlay",
+        text: "THROWBACK",
+        duration: 90,
+        style: "lofi-anime",
+        colors: { primary: "#ff6b6b", secondary: "#4ecdc4", background: "#1a1a2e", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.8 },
+      },
+      {
+        id: "scene-2",
+        type: "glitch-text",
+        text: "VIBES",
+        duration: 90,
+        style: "lofi-anime",
+        colors: { primary: "#ff6b6b", secondary: "#4ecdc4", background: "#1a1a2e", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.9 },
+      },
+    ],
+  },
+  {
+    id: "number-stats",
+    name: "Big Number Stats",
+    category: "educational",
+    description: "Animated counter for impressive statistics",
+    duration: 8,
+    style: "gradient-flow",
+    colors: { primary: "#06b6d4", secondary: "#8b5cf6", background: "#0c0a09", text: "#ffffff" },
+    customizable: ["number", "label", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "text-reveal",
+        text: "DID YOU KNOW?",
+        duration: 60,
+        style: "gradient-flow",
+        colors: { primary: "#06b6d4", secondary: "#8b5cf6", background: "#0c0a09", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.7 },
+      },
+      {
+        id: "scene-2",
+        type: "number-counter",
+        text: "10M+ Downloads",
+        duration: 180,
+        style: "gradient-flow",
+        colors: { primary: "#06b6d4", secondary: "#8b5cf6", background: "#0c0a09", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.8 },
+      },
+    ],
+  },
+  {
+    id: "app-showcase",
+    name: "App Showcase",
+    category: "product-demo",
+    description: "Mobile app mockup with device frame",
+    duration: 10,
+    style: "kinetic-3d",
+    colors: { primary: "#8b5cf6", secondary: "#d946ef", background: "#18181b", text: "#ffffff" },
+    customizable: ["app", "features", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "text-reveal",
+        text: "INTRODUCING",
+        duration: 60,
+        style: "kinetic-3d",
+        colors: { primary: "#8b5cf6", secondary: "#d946ef", background: "#18181b", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.7 },
+      },
+      {
+        id: "scene-2",
+        type: "device-mockup",
+        text: "Your New Favorite App",
+        duration: 180,
+        style: "kinetic-3d",
+        colors: { primary: "#8b5cf6", secondary: "#d946ef", background: "#18181b", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.9 },
+      },
+      {
+        id: "scene-3",
+        type: "bounce-in",
+        text: "Download Now",
+        duration: 60,
+        style: "kinetic-3d",
+        colors: { primary: "#8b5cf6", secondary: "#d946ef", background: "#18181b", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.8 },
+      },
+    ],
+  },
+  {
+    id: "tutorial-steps",
+    name: "Tutorial Steps",
+    category: "explainer",
+    description: "Step-by-step checklist animation",
+    duration: 12,
+    style: "corporate-minimal",
+    colors: { primary: "#2563eb", secondary: "#64748b", background: "#ffffff", text: "#1e293b" },
+    customizable: ["steps", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "text-reveal",
+        text: "Quick Tutorial",
+        duration: 60,
+        style: "corporate-minimal",
+        colors: { primary: "#2563eb", secondary: "#64748b", background: "#ffffff", text: "#1e293b" },
+        animation: { easing: "spring", intensity: 0.6 },
+      },
+      {
+        id: "scene-2",
+        type: "checklist",
+        text: "Open the app|Create account|Start creating",
+        duration: 240,
+        style: "corporate-minimal",
+        colors: { primary: "#2563eb", secondary: "#64748b", background: "#ffffff", text: "#1e293b" },
+        animation: { easing: "spring", intensity: 0.7 },
+      },
+      {
+        id: "scene-3",
+        type: "animated-icon",
+        text: "✅ You're all set!",
+        duration: 60,
+        style: "corporate-minimal",
+        colors: { primary: "#2563eb", secondary: "#64748b", background: "#ffffff", text: "#1e293b" },
+        animation: { easing: "spring", intensity: 0.8 },
+      },
+    ],
+  },
+  {
+    id: "timeline-journey",
+    name: "Timeline Journey",
+    category: "educational",
+    description: "Animated timeline for history or process",
+    duration: 10,
+    style: "elegant-classic",
+    colors: { primary: "#b45309", secondary: "#a16207", background: "#fffbeb", text: "#451a03" },
+    customizable: ["events", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "text-reveal",
+        text: "Our Journey",
+        duration: 60,
+        style: "elegant-classic",
+        colors: { primary: "#b45309", secondary: "#a16207", background: "#fffbeb", text: "#451a03" },
+        animation: { easing: "spring", intensity: 0.6 },
+      },
+      {
+        id: "scene-2",
+        type: "timeline",
+        text: "Founded|Growth|Expansion|Today",
+        duration: 240,
+        style: "elegant-classic",
+        colors: { primary: "#b45309", secondary: "#a16207", background: "#fffbeb", text: "#451a03" },
+        animation: { easing: "spring", intensity: 0.7 },
+      },
+    ],
+  },
+  {
+    id: "code-demo",
+    name: "Code Demo",
+    category: "educational",
+    description: "Typewriter effect for code or tech content",
+    duration: 8,
+    style: "neon-futuristic",
+    colors: { primary: "#00ff88", secondary: "#00d4ff", background: "#0a0a0a", text: "#ffffff" },
+    customizable: ["code", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "typewriter",
+        text: "npm install motionforge",
+        duration: 150,
+        style: "neon-futuristic",
+        colors: { primary: "#00ff88", secondary: "#00d4ff", background: "#0a0a0a", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.7 },
+      },
+      {
+        id: "scene-2",
+        type: "bounce-in",
+        text: "Ready to create!",
+        duration: 90,
+        style: "neon-futuristic",
+        colors: { primary: "#00ff88", secondary: "#00d4ff", background: "#0a0a0a", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.9 },
+      },
+    ],
+  },
+  {
+    id: "comment-reaction",
+    name: "Comment Reaction",
+    category: "shorts-reels",
+    description: "Speech bubble for commentary videos",
+    duration: 5,
+    style: "bold-modern",
+    colors: { primary: "#6366f1", secondary: "#ec4899", background: "#0f0f23", text: "#ffffff" },
+    customizable: ["comment", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "speech-bubble",
+        text: "Wait what?!",
+        duration: 90,
+        style: "bold-modern",
+        colors: { primary: "#6366f1", secondary: "#ec4899", background: "#0f0f23", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.9 },
+      },
+      {
+        id: "scene-2",
+        type: "reaction-popup",
+        text: "😂",
+        duration: 60,
+        style: "bold-modern",
+        colors: { primary: "#6366f1", secondary: "#ec4899", background: "#0f0f23", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 1.0 },
+      },
+    ],
+  },
+  {
+    id: "wave-intro",
+    name: "Wave Background Intro",
+    category: "youtube-intro",
+    description: "Animated gradient waves with text",
+    duration: 8,
+    style: "gradient-flow",
+    colors: { primary: "#06b6d4", secondary: "#8b5cf6", background: "#0c0a09", text: "#ffffff" },
+    customizable: ["title", "colors"],
+    scenes: [
+      {
+        id: "scene-1",
+        type: "gradient-wave",
+        text: "YOUR CHANNEL",
+        duration: 150,
+        style: "gradient-flow",
+        colors: { primary: "#06b6d4", secondary: "#8b5cf6", background: "#0c0a09", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.8 },
+      },
+      {
+        id: "scene-2",
+        type: "kinetic-typography",
+        text: "NEW VIDEO",
+        duration: 90,
+        style: "gradient-flow",
+        colors: { primary: "#06b6d4", secondary: "#8b5cf6", background: "#0c0a09", text: "#ffffff" },
+        animation: { easing: "spring", intensity: 0.9 },
+      },
+    ],
+  },
+];
+
+export const TEMPLATE_CATEGORIES = [
+  { id: "youtube-intro", label: "YouTube Intros", icon: "🎬" },
+  { id: "social-media", label: "Social Media", icon: "📱" },
+  { id: "explainer", label: "Explainers", icon: "📚" },
+  { id: "product-demo", label: "Product Demos", icon: "📦" },
+  { id: "vlog", label: "Vlogs", icon: "🎥" },
+  { id: "educational", label: "Educational", icon: "🎓" },
+  { id: "promotional", label: "Promotional", icon: "🎯" },
+  { id: "shorts-reels", label: "Shorts/Reels", icon: "⚡" },
+];

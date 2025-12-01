@@ -1,58 +1,49 @@
 import { z } from "zod";
-import type { RenderMediaOnLambdaOutput } from "@remotion/lambda/client";
-import {
-  ProgressRequest,
-  ProgressResponse,
-  RenderRequest,
-} from "../types/schema";
-import { CompositionProps } from "../types/constants";
-import { ApiResponse } from "../helpers/api-response";
-
-const makeRequest = async <Res>(
-  endpoint: string,
-  body: unknown,
-): Promise<Res> => {
-  const result = await fetch(endpoint, {
-    method: "post",
-    body: JSON.stringify(body),
-    headers: {
-      "content-type": "application/json",
-    },
-  });
-  const json = (await result.json()) as ApiResponse<Res>;
-  if (json.type === "error") {
-    throw new Error(json.message);
-  }
-
-  return json.data;
-};
+import { RenderRequest, ProgressRequest } from "../types/schema";
 
 export const renderVideo = async ({
   id,
   inputProps,
-}: {
-  id: string;
-  inputProps: z.infer<typeof CompositionProps>;
-}) => {
-  const body: z.infer<typeof RenderRequest> = {
-    id,
-    inputProps,
-  };
+}: z.infer<typeof RenderRequest>) => {
+  const response = await fetch("/api/lambda/render", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id, inputProps }),
+  });
 
-  return makeRequest<RenderMediaOnLambdaOutput>("/api/lambda/render", body);
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to start render");
+  }
+
+  const data = await response.json();
+  return {
+    renderId: data.renderId as string,
+    bucketName: data.bucketName as string,
+  };
 };
 
 export const getProgress = async ({
   id,
   bucketName,
-}: {
-  id: string;
-  bucketName: string;
-}) => {
-  const body: z.infer<typeof ProgressRequest> = {
-    id,
-    bucketName,
-  };
+}: z.infer<typeof ProgressRequest>) => {
+  const response = await fetch("/api/lambda/progress", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id, bucketName }),
+  });
 
-  return makeRequest<ProgressResponse>("/api/lambda/progress", body);
+  if (!response.ok) {
+    throw new Error("Failed to get progress");
+  }
+
+  const data = await response.json();
+  return data as
+    | { type: "error"; message: string }
+    | { type: "done"; url: string; size: number }
+    | { type: "progress"; progress: number };
 };

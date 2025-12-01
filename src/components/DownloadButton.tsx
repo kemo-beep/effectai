@@ -42,7 +42,7 @@ export const DownloadButton: React.FC<{
 
   return (
     <div style={row}>
-      <Button secondary onClick={undo}>
+      <Button variant="secondary" onClick={undo}>
         <UndoIcon></UndoIcon>
       </Button>
       <Spacing></Spacing>

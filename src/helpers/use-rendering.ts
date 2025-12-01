@@ -4,12 +4,8 @@ import { getProgress, renderVideo } from "../lambda/api";
 import { CompositionProps } from "../types/constants";
 
 export type State =
-  | {
-      status: "init";
-    }
-  | {
-      status: "invoking";
-    }
+  | { status: "init" }
+  | { status: "invoking" }
   | {
       renderId: string;
       bucketName: string;
@@ -37,37 +33,32 @@ const wait = async (milliSeconds: number) => {
 
 export const useRendering = (
   id: string,
-  inputProps: z.infer<typeof CompositionProps>,
+  inputProps: z.infer<typeof CompositionProps>
 ) => {
-  const [state, setState] = useState<State>({
-    status: "init",
-  });
+  const [state, setState] = useState<State>({ status: "init" });
 
   const renderMedia = useCallback(async () => {
-    setState({
-      status: "invoking",
-    });
+    setState({ status: "invoking" });
+
     try {
       const { renderId, bucketName } = await renderVideo({ id, inputProps });
       setState({
         status: "rendering",
         progress: 0,
-        renderId: renderId,
-        bucketName: bucketName,
+        renderId,
+        bucketName,
       });
 
       let pending = true;
 
       while (pending) {
-        const result = await getProgress({
-          id: renderId,
-          bucketName: bucketName,
-        });
+        const result = await getProgress({ id: renderId, bucketName });
+
         switch (result.type) {
           case "error": {
             setState({
               status: "error",
-              renderId: renderId,
+              renderId,
               error: new Error(result.message),
             });
             pending = false;
@@ -85,9 +76,9 @@ export const useRendering = (
           case "progress": {
             setState({
               status: "rendering",
-              bucketName: bucketName,
+              bucketName,
               progress: result.progress,
-              renderId: renderId,
+              renderId,
             });
             await wait(1000);
           }
@@ -96,7 +87,7 @@ export const useRendering = (
     } catch (err) {
       setState({
         status: "error",
-        error: err as Error,
+        error: err instanceof Error ? err : new Error("Unknown error"),
         renderId: null,
       });
     }
@@ -106,11 +97,12 @@ export const useRendering = (
     setState({ status: "init" });
   }, []);
 
-  return useMemo(() => {
-    return {
+  return useMemo(
+    () => ({
       renderMedia,
       state,
       undo,
-    };
-  }, [renderMedia, state, undo]);
+    }),
+    [renderMedia, state, undo]
+  );
 };
