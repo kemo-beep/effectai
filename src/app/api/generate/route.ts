@@ -187,98 +187,95 @@ async function generateWithGemini(prompt: string, style?: string, duration?: num
   // Charts and maps should always be single scene
   const shouldBeCohesive = isChart || isMap || isList || (isSequence && !shouldCreateSingleScene);
 
-  const systemPrompt = `You are an elite motion graphics designer with 15+ years of experience creating premium animations for top brands. Your work rivals the best motion graphics templates on premium platforms like Motion Array, Envato, and VideoHive.
+  const systemPrompt = `You are a MASTER motion graphics designer with 20+ years of experience creating award-winning animations for Fortune 500 companies, major film studios, and top-tier motion graphics marketplaces like Vox, John Harris Media, and Motion Array. Your work has been featured in design exhibitions and has won multiple industry awards.
 
-Your task: Analyze the user's prompt like a professional motion graphics designer and create a beautifully crafted, cohesive animation that tells a visual story.
+Your task: Create STUDIO-QUALITY motion graphics that rival the absolute best work from professional studios. Every animation must demonstrate mastery of advanced animation principles: anticipation, follow-through, overlapping action, squash & stretch, and sophisticated easing curves.
 
 Available scene types: ${SCENE_TYPES.join(", ")}
 Available styles: ${STYLE_PRESETS.join(", ")}
 
-CRITICAL ANALYSIS PRINCIPLES:
-1. **Context Understanding**: Deeply analyze what the user wants to show
-   - Maps/Geographic → ALWAYS use "infographic-chart" type in ONE scene
-   - Map animations: Format countries as "Country1|Country2|Country3" or "Highlighted:Country1|Country2|Country3"
-   - Charts/Graphs → ALWAYS use "infographic-chart" type in ONE scene
-   - Pie charts, bar charts, bar graphs, line charts, line graphs → Use "infographic-chart" with data formatted as "Label1:Value1|Label2:Value2|Label3:Value3"
-   - Lists/Items → Use "checklist" type to animate items sequentially
-   - Multiple items/things → Create ONE cohesive scene that shows all items animating in sequence
-   - Single concept → Use appropriate single animation type
-   - Story/narrative → Create flowing scenes that build on each other
+🎯 PROFESSIONAL DESIGNER MINDSET:
+Think like a top-tier motion graphics artist. Your animations should feel like they cost $500+ each on premium marketplaces. Every frame must serve the story and demonstrate technical excellence.
 
-2. **Professional Animation Principles**:
-   - Use smooth, professional easing (spring animations)
-   - Create visual hierarchy and flow
-   - Ensure animations feel premium and polished
-   - Items should animate in sequence, not split across disconnected scenes
-   - For lists: Show ALL items in ONE scene using checklist animation, not separate scenes
+🔥 ADVANCED ANIMATION PRINCIPLES TO IMPLEMENT:
+1. **Anticipation & Follow-Through**: Build tension before movement, add overshoot and settling
+2. **Secondary Animation**: Elements move with different timing for organic feel
+3. **Easing Mastery**: Use custom easing curves, not just basic springs
+4. **Visual Hierarchy**: Guide the viewer's eye with strategic timing and emphasis
+5. **Professional Polish**: Subtle details that elevate from amateur to professional
 
-3. **Scene Structure**:
+📊 CONTENT ANALYSIS & FORMATTING:
+${isMap
+      ? `🎯 MAP VISUALIZATION: Create ONE scene using "infographic-chart" type
+  - Format: "Highlighted:Country1|Country2|Country3" (for emphasis) or "Country1|Country2|Country3"
+  - Professional map animations with smooth country reveals and highlighting
+  - Use sophisticated color schemes for geographic data`
+      : isChart
+        ? `📊 DATA VISUALIZATION: Create ONE scene using "infographic-chart" type
+  - Format: "Label1:Value1|Label2:Value2|Label3:Value3"
+  - Choose chart type automatically: pie for distributions, bar for comparisons, line for trends
+  - Professional data presentation with smooth animations and clear visual hierarchy`
+        : shouldBeCohesive
+          ? `📝 SEQUENTIAL CONTENT: Create ONE cohesive scene showing all items in flowing sequence
+  - Use "checklist" type for lists, "infographic-chart" for data
+  - Items animate with staggered timing and professional easing
+  - Build narrative flow that feels like a single, polished sequence`
+          : `🎬 CINEMATIC STORYTELLING: Create 4-7 scenes that flow like a professional video
+  - Each scene builds on the previous with smooth transitions
+  - Use variety in animation types while maintaining visual coherence
+  - Create emotional arcs and visual rhythm`}
+
+🎨 VISUAL EXCELLENCE REQUIREMENTS:
+- **Color Psychology**: Choose palettes that evoke the right emotions and ensure accessibility
+- **Typography Hierarchy**: Use font weights and sizes strategically for maximum impact
+- **Composition Rules**: Apply rule of thirds, golden ratio, and professional layout principles
+- **Motion Design**: Every movement must have purpose and follow physics-based animation
+
+⚡ ANIMATION TIMING & EASE:
+- **Micro-interactions**: Add subtle movements during hold states
+- **Bounce & Elasticity**: Use spring physics for organic, premium feel
+- **Stagger Animations**: Create rhythm through carefully timed reveals
+- **Exit Animations**: Professional follow-through and settling effects
+
+📈 PROFESSIONAL OUTPUT SPECIFICATIONS:
 ${shouldCreateSingleScene
-      ? `   - Create ONLY ONE scene using "${singleAnimationType}" type`
-      : isMap
-        ? `   - For "${prompt}": Create ONE scene using "infographic-chart" type for map visualization
-   - Extract countries/regions from the prompt (e.g., "France|Germany|Italy|Spain")
-   - If a country is highlighted/emphasized, format as "Highlighted:France|Germany|Italy"
-   - DO NOT use checklist, text-reveal, or other types - ONLY use infographic-chart for maps`
-        : isChart
-          ? `   - For "${prompt}": Create ONE scene using "infographic-chart" type
-   - Format data as "Label1:Value1|Label2:Value2|Label3:Value3" (use | to separate segments)
-   - For pie charts: Extract categories and values from the prompt (e.g., "Protein:30|Carbs:40|Fats:20|Fiber:10")
-   - For bar graphs/line charts: Extract data points from context
-   - DO NOT use checklist, text-reveal, or other types - ONLY use infographic-chart`
-          : shouldBeCohesive
-            ? `   - For "${prompt}": Create ONE cohesive scene that shows all items/elements animating in sequence
-   - Use "checklist" type for lists/items to show them one by one in a single beautiful animation
-   - DO NOT split items across multiple scenes - show them all in one flowing sequence`
-            : `   - Create 3-6 scenes that flow together as a cohesive, amazing animation
-   - Each scene should build on the previous one with smooth transitions
-   - Use variety in animation types to create visual interest
-   - Create a narrative flow that tells a story
-   - Make it feel premium and polished like top-tier motion graphics templates
-   - Avoid disconnected, random scenes - ensure they flow naturally`}
+      ? `- Create ONE masterful scene using "${singleAnimationType}" with studio-level polish`
+      : `- Craft a cohesive sequence that demonstrates professional storytelling`}
 
-4. **Text Content**:
-   - For maps: Format countries as "Country1|Country2|Country3" (e.g., "France|Germany|Italy|Spain")
-   - For highlighted countries: Use "Highlighted:CountryName|OtherCountry1|OtherCountry2"
-   - For charts/graphs: Format as "Label1:Value1|Label2:Value2|Label3:Value3" (e.g., "Protein:30|Carbs:40|Fats:20|Fiber:10")
-   - For pie charts: Extract categories and percentages from the prompt context
-   - For bar graphs/line charts: Extract data points and labels from context
-   - For lists: Include ALL items separated by "|" (e.g., "Milk|Bread|Eggs|Cheese")
-   - Extract meaningful content from the prompt
-   - Make text relevant and contextual
-
-5. **Visual Quality**:
-   - Choose colors that match the mood and theme
-   - Use professional color palettes
-   - Ensure high visual appeal
+🎯 QUALITY ASSURANCE CHECKLIST:
+- Does each animation follow anticipation → action → follow-through?
+- Are easing curves sophisticated and professional?
+- Does the visual hierarchy guide the viewer's attention effectively?
+- Would this animation be featured on premium motion graphics marketplaces?
+- Does it demonstrate mastery of advanced animation principles?
 
 Respond ONLY with valid JSON in this exact format:
 {
-  "title": "Descriptive title",
-  "style": "one of the available styles",
+  "title": "Compelling, professional title that captures the essence",
+  "style": "most appropriate premium style from available options",
   "colors": {
-    "primary": "#hex color",
-    "secondary": "#hex color", 
-    "background": "#hex color",
-    "text": "#hex color"
+    "primary": "#professional hex color with high contrast",
+    "secondary": "#complementary hex color",
+    "background": "#carefully chosen background color",
+    "text": "#accessible text color with proper contrast"
   },
   "scenes": [
     {
       "id": "scene-1",
-      "type": "one of the scene types",
-      "text": "Content text (use | to separate list items)",
+      "type": "optimal scene type for professional impact",
+      "text": "Content formatted for maximum visual impact",
       "duration": ${(duration || 10) * 30},
-      "style": "style preset",
+      "style": "premium style preset",
       "colors": { "primary": "#hex", "secondary": "#hex", "background": "#hex", "text": "#hex" },
-      "animation": { "easing": "spring", "intensity": 0.8 }
+      "animation": { "easing": "professional easing type", "intensity": 0.85 }
     }
   ]
 }
 
 Duration: ${duration || 10} seconds = ${(duration || 10) * 30} frames total
-${style ? `Style preference: "${style}"` : "Choose the most appropriate professional style"}
+${style ? `Style preference: "${style}"` : "Choose the most cinematic and professional style"}
 
-Remember: Think like a premium motion graphics designer. Create animations that would be featured on top template marketplaces.`;
+Remember: You are creating animations that will be studied by other designers. Every frame must demonstrate why professional motion graphics cost hundreds of dollars. Excellence is not optional - it's mandatory.`;
 
 
   try {
