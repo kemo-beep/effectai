@@ -18,6 +18,8 @@ import { SceneEditor } from "../components/SceneEditor";
 import { ExportDialog } from "../components/ExportDialog";
 import { TemplateBrowser } from "../components/TemplateBrowser";
 import { useRendering } from "../helpers/use-rendering";
+import { Navbar } from "../components/Layout/Navbar";
+import { Footer } from "../components/Layout/Footer";
 
 export default function Home() {
   const [compositionProps, setCompositionProps] = useState<CompositionPropsType>({
@@ -105,40 +107,8 @@ export default function Home() {
 
   return (
     <>
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4 transition-all duration-300">
-        <div className="max-w-7xl mx-auto">
-          <div className="glass rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3 group cursor-pointer">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-secondary flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform duration-300">
-                <span className="text-xl">⚡</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-lg font-bold text-white tracking-tight group-hover:text-primary-200 transition-colors">MotionForge</span>
-                <span className="text-[10px] uppercase tracking-wider text-primary-200 font-semibold opacity-80">AI Studio</span>
-              </div>
-            </div>
 
-            <nav className="hidden md:flex items-center gap-8">
-              {['Gallery', 'Pricing', 'Docs'].map((item) => (
-                <button key={item} className="text-sm font-medium text-white/60 hover:text-white transition-colors relative group">
-                  {item}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-500 transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100" />
-                </button>
-              ))}
-            </nav>
-
-            <div className="flex items-center gap-3">
-              <button className="btn-secondary text-sm py-2 px-4 hidden sm:block">
-                Log In
-              </button>
-              <button className="btn-primary text-sm py-2 px-4 shadow-glow">
-                Get Started
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* Template Browser Modal */}
       {showTemplates && (
@@ -304,54 +274,9 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-white/5 bg-background-secondary/50 backdrop-blur-lg mt-auto">
-        <div className="max-w-7xl mx-auto px-6 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-xl">⚡</span>
-                <span className="text-lg font-bold text-white">MotionForge</span>
-              </div>
-              <p className="text-sm text-white/40 max-w-xs leading-relaxed">
-                The next generation of motion graphics creation.
-                Powered by artificial intelligence to help you create stunning videos in minutes.
-              </p>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-bold text-white mb-4">Product</h4>
-              <ul className="space-y-2 text-sm text-white/40">
-                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Templates</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Showcase</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-bold text-white mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-white/40">
-                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-xs text-white/30">
-              © 2025 MotionForge AI. All rights reserved.
-            </p>
-            <div className="flex gap-6">
-              <a href="#" className="text-xs text-white/30 hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="text-xs text-white/30 hover:text-white transition-colors">Terms of Service</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </>
+
   );
 }
 

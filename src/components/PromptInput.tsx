@@ -1,5 +1,8 @@
 "use client";
 import React, { useState } from "react";
+import { Button } from "./Button/Button";
+import { cn } from "../lib/utils";
+import { Sparkles, Zap, Monitor, Smartphone, Square, Camera, Palette, Clock } from "lucide-react";
 
 interface PromptInputProps {
   onGenerate: (prompt: string, style: string, duration: number, aspectRatio: string) => void;
@@ -25,10 +28,10 @@ const DURATION_OPTIONS = [
 ];
 
 const ASPECT_RATIO_OPTIONS = [
-  { value: "16:9", label: "16:9", desc: "Landscape", icon: "📺" },
-  { value: "9:16", label: "9:16", desc: "Vertical", icon: "📱" },
-  { value: "1:1", label: "1:1", desc: "Square", icon: "⬜" },
-  { value: "4:5", label: "4:5", desc: "Portrait", icon: "📸" },
+  { value: "16:9", label: "16:9", desc: "Landscape", icon: Monitor },
+  { value: "9:16", label: "9:16", desc: "Vertical", icon: Smartphone },
+  { value: "1:1", label: "1:1", desc: "Square", icon: Square },
+  { value: "4:5", label: "4:5", desc: "Portrait", icon: Camera },
 ];
 
 const EXAMPLE_PROMPTS = [
@@ -66,8 +69,8 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onGenerate, isLoading 
               rows={3}
               disabled={isLoading}
             />
-            <div className="absolute right-5 top-5 text-2xl opacity-50 pointer-events-none animate-pulse-slow">
-              ✨
+            <div className="absolute right-5 top-5 text-primary-400 pointer-events-none animate-pulse-slow">
+              <Sparkles className="w-6 h-6" />
             </div>
           </div>
         </div>
@@ -76,7 +79,9 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onGenerate, isLoading 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Style Selection */}
           <div className="md:col-span-4 flex flex-col gap-2">
-            <label className="label">Style</label>
+            <label className="label flex items-center gap-2">
+              <Palette className="w-3 h-3" /> Style
+            </label>
             <div className="relative">
               <select
                 value={style}
@@ -95,21 +100,25 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onGenerate, isLoading 
 
           {/* Aspect Ratio Selection */}
           <div className="md:col-span-4 flex flex-col gap-2">
-            <label className="label">Aspect Ratio</label>
+            <label className="label flex items-center gap-2">
+              <Monitor className="w-3 h-3" /> Aspect Ratio
+            </label>
             <div className="grid grid-cols-4 gap-1 bg-white/5 p-1 rounded-xl border border-white/5 h-[46px]">
               {ASPECT_RATIO_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
                   onClick={() => setAspectRatio(opt.value)}
-                  className={`relative flex items-center justify-center rounded-lg transition-all duration-200 ${aspectRatio === opt.value
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-white/40 hover:text-white hover:bg-white/5'
-                    }`}
+                  className={cn(
+                    "relative flex items-center justify-center rounded-lg transition-all duration-200",
+                    aspectRatio === opt.value
+                      ? "bg-primary-600 text-white shadow-lg"
+                      : "text-white/40 hover:text-white hover:bg-white/5"
+                  )}
                   disabled={isLoading}
                   title={`${opt.label} - ${opt.desc}`}
                 >
-                  <span className="text-lg">{opt.icon}</span>
+                  <opt.icon className="w-5 h-5" />
                 </button>
               ))}
             </div>
@@ -117,17 +126,21 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onGenerate, isLoading 
 
           {/* Duration Selection */}
           <div className="md:col-span-4 flex flex-col gap-2">
-            <label className="label">Duration</label>
+            <label className="label flex items-center gap-2">
+              <Clock className="w-3 h-3" /> Duration
+            </label>
             <div className="grid grid-cols-4 gap-1 bg-white/5 p-1 rounded-xl border border-white/5 h-[46px]">
               {DURATION_OPTIONS.map((opt) => (
                 <button
                   key={opt.value}
                   type="button"
                   onClick={() => setDuration(opt.value)}
-                  className={`text-xs font-medium rounded-lg transition-all duration-200 ${duration === opt.value
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-white/40 hover:text-white hover:bg-white/5'
-                    }`}
+                  className={cn(
+                    "text-xs font-medium rounded-lg transition-all duration-200",
+                    duration === opt.value
+                      ? "bg-primary-600 text-white shadow-lg"
+                      : "text-white/40 hover:text-white hover:bg-white/5"
+                  )}
                   disabled={isLoading}
                 >
                   {opt.label}
@@ -146,6 +159,7 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onGenerate, isLoading 
               {EXAMPLE_PROMPTS.slice(0, 2).map((example, i) => (
                 <button
                   key={i}
+                  type="button"
                   onClick={() => setPrompt(example)}
                   className="px-3 py-1.5 text-[11px] bg-white/5 hover:bg-primary-500/10 border border-white/5 hover:border-primary-500/30 rounded-full text-white/50 hover:text-primary-200 transition-all duration-200 whitespace-nowrap"
                   disabled={isLoading}
@@ -157,24 +171,16 @@ export const PromptInput: React.FC<PromptInputProps> = ({ onGenerate, isLoading 
           </div>
 
           {/* Generate Button */}
-          <button
+          <Button
             type="submit"
             disabled={!prompt.trim() || isLoading}
-            className={`btn-primary w-full sm:w-auto min-w-[160px] flex items-center justify-center gap-2 py-3 text-base shadow-glow-lg ${!prompt.trim() || isLoading ? 'opacity-50 cursor-not-allowed grayscale' : ''
-              }`}
+            loading={isLoading}
+            size="lg"
+            className="w-full sm:w-auto min-w-[160px] shadow-glow-lg"
+            leftIcon={!isLoading && <Zap className="w-5 h-5" />}
           >
-            {isLoading ? (
-              <>
-                <span className="animate-spin">⚡</span>
-                Generating...
-              </>
-            ) : (
-              <>
-                <span>🚀</span>
-                Generate Video
-              </>
-            )}
-          </button>
+            {isLoading ? "Generating..." : "Generate Video"}
+          </Button>
         </div>
       </form>
     </div>
